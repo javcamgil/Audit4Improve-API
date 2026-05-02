@@ -1,0 +1,24 @@
+name: Flujo javcamgil
+on:
+  issues:
+    types: [opened]
+  project_card:
+    types: [moved]
+  workflow_dispatch:
+
+jobs:
+  gestion_automatica:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # Permiso necesario para escribir comentarios
+    steps:
+      - name: Confirmacion en consola
+        run: echo "Flujo disparado por el evento ${{ github.event_name }}"
+        
+      - name: Comentar en el Issue automaticamente
+        uses: peter-evans/create-or-update-comment@v3
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "¡Hola! 🤖 He detectado la creación de este Issue automáticamente mediante GitHub Actions. El usuario javcamgil lo revisará lo antes posible."
